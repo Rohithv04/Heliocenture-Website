@@ -4,10 +4,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileOverlay = document.querySelector('.mobile-overlay');
 
     if (menuToggle && mobileOverlay) {
+        const closeBtn = mobileOverlay.querySelector('.close-mobile-menu');
+
         menuToggle.addEventListener('click', () => {
             mobileOverlay.classList.toggle('active');
             menuToggle.innerHTML = mobileOverlay.classList.contains('active') ? '✕' : '☰';
         });
+
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                mobileOverlay.classList.remove('active');
+                menuToggle.innerHTML = '☰';
+            });
+        }
 
         const mobileLinks = mobileOverlay.querySelectorAll('a');
         mobileLinks.forEach(link => {

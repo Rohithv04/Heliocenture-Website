@@ -120,6 +120,7 @@ h1, h2, h3, h4, h5, h6, .display-heading {
 
 .hero-line-1 {
   font-size: 0.85em;
+  display: block;
 }
 
 .hero-line-2 {
@@ -990,6 +991,30 @@ footer {
   transition: opacity 300ms ease;
 }
 
+.close-mobile-menu {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--surface-alt);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 200ms var(--ease-standard);
+  z-index: 1001;
+}
+
+.close-mobile-menu:hover {
+  background: var(--border-color);
+  transform: scale(1.05);
+}
+
 .mobile-overlay.active {
   opacity: 1;
   pointer-events: auto;
@@ -1006,7 +1031,12 @@ footer {
 /* Responsive Styles */
 @media (max-width: 768px) {
   .hero-heading {
-    font-size: clamp(2.5rem, 8vw, 3.5rem);
+    font-size: clamp(2rem, 7vw, 3.5rem);
+  }
+  .hero-line-1 {
+    font-size: clamp(1rem, 5.5vw, 1.4rem);
+    white-space: nowrap;
+    margin-bottom: 0;
   }
   .hero-line-2 {
     white-space: normal;
@@ -1133,9 +1163,13 @@ footer {
   flex-direction: column;
 }
 
-.case-study-card:hover, .case-study-card.active {
+.case-study-card:hover {
   box-shadow: var(--shadow-hover);
   transform: translateY(-4px);
+}
+
+.case-study-card.active {
+  box-shadow: var(--shadow-hover);
   background: var(--surface-alt);
 }
 
@@ -1152,24 +1186,37 @@ footer {
 }
 
 .cs-icon {
-  font-size: 28px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
   font-weight: 300;
   line-height: 1;
-  transition: transform 300ms var(--ease-standard);
+  transition: all 300ms var(--ease-standard);
   color: var(--text-primary);
+  border-radius: 50%;
+  background: transparent;
 }
 
-.case-study-card:hover .cs-icon, .case-study-card.active .cs-icon {
+.case-study-card.active .cs-icon {
   transform: rotate(45deg);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.cs-icon:hover {
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .cs-content {
   display: grid;
   grid-template-rows: 0fr;
   transition: grid-template-rows 400ms var(--ease-standard), margin-top 400ms var(--ease-standard);
+  margin-top: 0;
 }
 
-.case-study-card:hover .cs-content, .case-study-card.active .cs-content {
+.case-study-card.active .cs-content {
   grid-template-rows: 1fr;
   margin-top: 24px;
 }

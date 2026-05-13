@@ -49,6 +49,7 @@
 
     <!-- Mobile Menu Overlay -->
     <div class="mobile-overlay">
+        <button class="close-mobile-menu">✕</button>
         <a href="index.html#how-we-work">How We Work</a>
         <a href="index.html#services">Services</a>
         <a href="index.html#team">Team</a>
@@ -59,7 +60,7 @@
     <!-- Case Studies Hero -->
     <header class="hero container" style="padding-bottom: 20px;">
         <h1 class="hero-heading fade-up">
-            <span class="hero-line-1">Proven Results.</span><br>
+            <span class="hero-line-1">Proven Results.</span>
             <span class="hero-line-2">Our <span class="accent-italic">Case Studies</span>.</span>
         </h1>
         <p class="hero-subtext fade-up">
@@ -420,9 +421,17 @@
         document.addEventListener('DOMContentLoaded', () => {
             const cards = document.querySelectorAll('.case-study-card');
             cards.forEach(card => {
-                card.addEventListener('click', () => {
+                const header = card.querySelector('.cs-header');
+                const content = card.querySelector('.cs-content');
+
+                header.addEventListener('click', (e) => {
                     // Toggle active class on the clicked card
                     card.classList.toggle('active');
+                });
+
+                // Prevent clicks inside content from closing the card
+                content.addEventListener('click', (e) => {
+                    e.stopPropagation();
                 });
             });
         });
