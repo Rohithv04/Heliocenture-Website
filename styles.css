@@ -1308,6 +1308,9 @@ footer {
 
 @media (max-width: 600px) {
   .portfolio-grid {
+    column-count: 2;
+  }
+  .portfolio-grid.websites-active {
     column-count: 1;
   }
 }

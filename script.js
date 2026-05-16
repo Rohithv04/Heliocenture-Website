@@ -125,6 +125,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (portfolioTabs.length > 0 && portfolioItems.length > 0) {
         const showCategory = (category) => {
+            const portfolioGrid = document.getElementById('portfolio-grid');
+            if (portfolioGrid) {
+                if (category === 'websites') {
+                    portfolioGrid.classList.add('websites-active');
+                } else {
+                    portfolioGrid.classList.remove('websites-active');
+                }
+            }
+
             let loadedCount = 0;
             let imagesToLoad = [];
 
