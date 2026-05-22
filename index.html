@@ -70,34 +70,126 @@
     </div>
 
     <!-- Section 3: Hero -->
-    <header class="hero container">
-        <div class="trust-avatars fade-up">
-            <img src="Our Clients/ANJAPPAR LOGO-01.png" alt="Anjappar">
-            <img src="Our Clients/Chennai-Kulfi-Logo Website.png" alt="Chennai Kulfi">
-            <img src="Our Clients/Photons Logo.png" alt="Photons">
-            <img src="Our Clients/GMAK LASER LOGO FINAL.pdf (1)-01.png" alt="GMAK Laser">
-            <div class="trust-rating">
-                <span class="star">★</span><span class="star">★</span><span class="star">★</span><span
-                    class="star">★</span><span class="star">★</span>
-                <span>Trusted by 50+ Brands</span>
+    <section class="hero-new">
+        <!-- Dotted Background Grid overlay -->
+        <div class="hero-dots-overlay"></div>
+        
+        <!-- Social Icons Orbit (Parallax Container) -->
+        <div class="social-orbit">
+            <!-- Left Side Icons -->
+            <div class="social-icon-wrapper instagram" data-depth="0.7" data-side="left" style="left: 14%; top: 38%;">
+                <div class="glitch-layer glitch-orange"></div>
+                <div class="social-icon-card">
+                    <!-- SVG logo for Instagram (Custom Brand Gradient outline) -->
+                    <svg class="social-svg" viewBox="0 0 24 24" width="22" height="22">
+                        <defs>
+                            <linearGradient id="instagram-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#fdf497" />
+                                <stop offset="5%" stop-color="#fdf497" />
+                                <stop offset="45%" stop-color="#fd5949" />
+                                <stop offset="60%" stop-color="#d6249f" />
+                                <stop offset="100%" stop-color="#285AEB" />
+                            </linearGradient>
+                        </defs>
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="url(#instagram-grad)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+                        <circle cx="12" cy="12" r="4" fill="none" stroke="url(#instagram-grad)" stroke-width="2.2" />
+                        <circle cx="17.5" cy="6.5" r="1.5" fill="url(#instagram-grad)" />
+                    </svg>
+                    <!-- To replace the placeholder icon with a real asset, swap the inline <svg> with an <img> tag: <img src="assets/instagram.svg" alt="Instagram" class="social-svg"> -->
+                    <span class="icon-label">Instagram</span>
+                </div>
+            </div>
+
+            <div class="social-icon-wrapper meta" data-depth="0.4" data-side="left" style="left: 8%; top: 16%;">
+                <div class="glitch-layer glitch-orange"></div>
+                <div class="social-icon-card">
+                    <!-- SVG logo for Meta -->
+                    <svg class="social-svg" viewBox="0 0 16 16" width="22" height="22" fill="#0080fb">
+                        <path fill-rule="evenodd" d="M8.217 5.243C9.145 3.988 10.171 3 11.483 3 13.96 3 16 6.153 16.001 9.907c0 2.29-.986 3.725-2.757 3.725-1.543 0-2.395-.866-3.924-3.424l-.667-1.123-.118-.197a55 55 0 0 0-.53-.877l-1.178 2.08c-1.673 2.925-2.615 3.541-3.923 3.541C1.086 13.632 0 12.217 0 9.973 0 6.388 1.995 3 4.598 3q.477-.001.924.122c.31.086.611.22.913.407.577.359 1.154.915 1.782 1.714m1.516 2.224q-.378-.615-.727-1.133L9 6.326c.845-1.305 1.543-1.954 2.372-1.954 1.723 0 3.102 2.537 3.102 5.653 0 1.188-.39 1.877-1.195 1.877-.773 0-1.142-.51-2.61-2.87zM4.846 4.756c.725.1 1.385.634 2.34 2.001A212 212 0 0 0 5.551 9.3c-1.357 2.126-1.826 2.603-2.581 2.603-.777 0-1.24-.682-1.24-1.9 0-2.602 1.298-5.264 2.846-5.264q.137 0 .27.018"/>
+                    </svg>
+                    <!-- To replace the placeholder icon with a real asset, swap the inline <svg> with an <img> tag: <img src="assets/meta.svg" alt="Meta" class="social-svg"> -->
+                    <span class="icon-label">Meta</span>
+                </div>
+            </div>
+
+            <div class="social-icon-wrapper google-analytics" data-depth="0.85" data-side="left" style="left: 10%; top: 68%;">
+                <div class="glitch-layer glitch-orange"></div>
+                <div class="social-icon-card">
+                    <!-- SVG logo for Google Analytics -->
+                    <svg class="social-svg" viewBox="0 0 24 24" width="22" height="22">
+                        <path d="M6 20h3V12H6v8zm5 0h3V8h-3v12zm5 0h3V4h-3v16z" fill="#F4B400"/>
+                        <circle cx="7.5" cy="9.5" r="1.2" fill="#E37400" />
+                        <circle cx="12.5" cy="5.5" r="1.2" fill="#E37400" />
+                        <circle cx="17.5" cy="2.5" r="1.2" fill="#E37400" />
+                        <path d="M7.5 9.5l5-4 5-3" stroke="#E37400" stroke-width="1.5" fill="none" stroke-linecap="round" />
+                    </svg>
+                    <!-- To replace the placeholder icon with a real asset, swap the inline <svg> with an <img> tag: <img src="assets/analytics.svg" alt="Analytics" class="social-svg"> -->
+                    <span class="icon-label">Analytics</span>
+                </div>
+            </div>
+
+            <!-- Right Side Icons -->
+            <div class="social-icon-wrapper youtube" data-depth="0.5" data-side="right" style="right: 12%; top: 18%;">
+                <div class="glitch-layer glitch-orange"></div>
+                <div class="social-icon-card">
+                    <!-- SVG logo for YouTube -->
+                    <svg class="social-svg" viewBox="0 0 24 24" width="22" height="22" fill="#FF0000">
+                        <path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.002 3.002 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                    </svg>
+                    <!-- To replace the placeholder icon with a real asset, swap the inline <svg> with an <img> tag: <img src="assets/youtube.svg" alt="YouTube" class="social-svg"> -->
+                    <span class="icon-label">YouTube</span>
+                </div>
+            </div>
+
+            <div class="social-icon-wrapper whatsapp" data-depth="0.75" data-side="right" style="right: 15%; top: 42%;">
+                <div class="glitch-layer glitch-orange"></div>
+                <div class="social-icon-card">
+                    <!-- SVG logo for WhatsApp -->
+                    <svg class="social-svg" viewBox="0 0 16 16" width="22" height="22" fill="#25D366">
+                        <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
+                    </svg>
+                    <!-- To replace the placeholder icon with a real asset, swap the inline <svg> with an <img> tag: <img src="assets/whatsapp.svg" alt="WhatsApp" class="social-svg"> -->
+                    <span class="icon-label">WhatsApp</span>
+                </div>
+            </div>
+
+            <div class="social-icon-wrapper facebook" data-depth="0.6" data-side="right" style="right: 9%; top: 66%;">
+                <div class="glitch-layer glitch-orange"></div>
+                <div class="social-icon-card">
+                    <!-- SVG logo for Facebook -->
+                    <svg class="social-svg" viewBox="0 0 24 24" width="22" height="22" fill="#1877F2">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                    <!-- To replace the placeholder icon with a real asset, swap the inline <svg> with an <img> tag: <img src="assets/facebook.svg" alt="Facebook" class="social-svg"> -->
+                    <span class="icon-label">Facebook</span>
+                </div>
             </div>
         </div>
 
-        <h1 class="hero-heading fade-up">
-            <span class="hero-line-1">We Don't Do Marketing.</span><br>
-            <span class="hero-line-2">We Build <span class="accent-italic">Revenue</span> <span
-                    style="color: var(--text-primary);">Infrastructure.</span></span>
-        </h1>
-
-        <p class="hero-subtext fade-up">
-            Most agencies sell reels, ad packages, and growth hacks. We build the intelligence, brand systems, and
-            performance engines that turn attention into compounding, predictable revenue.
-        </p>
-
-        <div class="hero-cta fade-up">
-            <a href="#book" class="btn-pill btn-primary">Book a Call</a>
+        <!-- Center Content -->
+        <div class="hero-content container">
+            <div class="trust-badge fade-up-hero">
+                <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                <span>Trusted by 50+ Growth Brands</span>
+            </div>
+            
+            <h1 class="hero-title fade-up-hero">
+                We Build <span class="accent-glow">Revenue</span><br>Infrastructure.
+            </h1>
+            
+            <p class="hero-description fade-up-hero">
+                Most agencies sell reels, ad packages, and growth hacks. We engineer the intelligence models, brand systems, and performance engines that turn raw attention into compounding, predictable revenue.
+            </p>
+            
+            <div class="hero-action-buttons fade-up-hero">
+                <a href="#book" class="btn-pill btn-primary btn-large">Book a Call</a>
+                <a href="#services" class="btn-pill btn-secondary btn-large">See How We Work</a>
+            </div>
         </div>
+    </section>
 
+    <!-- Section 3.1: Stats Bento Grid -->
+    <section class="hero-stats section container">
         <div class="bento-stats-grid">
             <div class="bento-stat-card fade-up" style="transition-delay: 100ms;">
                 <div class="bento-visual">
@@ -133,7 +225,7 @@
                 </div>
             </div>
         </div>
-    </header>
+    </section>
 
     <!-- Section 3.5: Our Clients Floater -->
     <section class="clients-floater">
@@ -562,6 +654,8 @@
         </div>
     </footer>
 
+    <!-- GSAP (GreenSock Animation Platform) CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="script.js"></script>
 </body>
 

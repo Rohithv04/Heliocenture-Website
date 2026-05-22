@@ -50,15 +50,167 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Initial Hero Load Sequence (if above fold)
-    setTimeout(() => {
-        const heroElements = document.querySelectorAll('.hero .fade-up');
-        heroElements.forEach((el, index) => {
-            setTimeout(() => {
-                el.classList.add('visible');
-            }, index * 100);
+    // ==========================================
+    // PREMIUM HERO SECTION ANIMATIONS (GSAP)
+    // ==========================================
+    const heroNew = document.querySelector('.hero-new');
+    const icons = document.querySelectorAll('.social-icon-wrapper');
+    
+    if (heroNew && icons.length > 0) {
+        // Stagger fade-in the text and CTA buttons
+        gsap.to('.fade-up-hero', {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            stagger: 0.15,
+            ease: 'power3.out'
         });
-    }, 100);
+
+        // Calculate center of hero and blast social icon wraps
+        const heroRect = heroNew.getBoundingClientRect();
+        const heroCenterX = heroRect.width / 2;
+        const heroCenterY = heroRect.height / 2;
+        
+        let completedCount = 0;
+        let isBlasted = false;
+
+        icons.forEach((icon) => {
+            // Get wrapper center position relative to the hero container
+            const iconLeft = icon.offsetLeft + icon.offsetWidth / 2;
+            const iconTop = icon.offsetTop + icon.offsetHeight / 2;
+            
+            // Calculate displacement vector from the center
+            const deltaX = iconLeft - heroCenterX;
+            const deltaY = iconTop - heroCenterY;
+            
+            // Blast out from center to absolute layouts
+            gsap.fromTo(icon, 
+                {
+                    x: -deltaX,
+                    y: -deltaY,
+                    scale: 0,
+                    opacity: 0,
+                    rotation: Math.random() * 90 - 45
+                },
+                {
+                    x: 0,
+                    y: 0,
+                    scale: 1,
+                    opacity: 1,
+                    rotation: Math.random() * 20 - 10,
+                    duration: 1.8,
+                    ease: 'power4.out',
+                    delay: 0.4 + Math.random() * 0.3,
+                    onComplete: () => {
+                        completedCount++;
+                        if (completedCount === icons.length) {
+                            isBlasted = true;
+                        }
+                    }
+                }
+            );
+        });
+
+        // Mouse Parallax & Dynamic Glitch Trail variables
+        let mouseX = 0;
+        let mouseY = 0;
+        let lastMouseX = null;
+        let lastMouseY = null;
+
+        window.addEventListener('mousemove', (e) => {
+            if (window.innerWidth <= 991) return;
+            
+            // Normalize mouse coordinates between -1 and 1
+            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+            mouseY = (e.clientY / window.innerHeight) * 2 - 1;
+
+            // Trigger temporary glitched trail on mouse speed/direction
+            if (isBlasted && lastMouseX !== null && lastMouseY !== null) {
+                const deltaX = e.clientX - lastMouseX;
+                const deltaY = e.clientY - lastMouseY;
+                const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                         // Only trigger if mouse moves faster than threshold to look professional
+                if (distance > 4) {
+                    const shiftX = Math.max(-28, Math.min(deltaX * 0.8, 28));
+                    const shiftY = Math.max(-28, Math.min(deltaY * 0.8, 28));
+                    
+                    icons.forEach((icon) => {
+                        const orangeLayer = icon.querySelector('.glitch-orange');
+                        
+                        if (orangeLayer) {
+                            gsap.killTweensOf(orangeLayer);
+                            
+                            // Displace layer as a trail opposite to cursor direction
+                            gsap.set(orangeLayer, {
+                                x: -shiftX,
+                                y: -shiftY,
+                                opacity: 0.75,
+                                scale: 1.06
+                            });
+                            
+                            // Return to normal and fade out smoothly
+                            gsap.to(orangeLayer, {
+                                x: 0,
+                                y: 0,
+                                opacity: 0,
+                                scale: 1,
+                                duration: 0.4,
+                                ease: 'power2.out'
+                            });
+                        }
+                    });
+                }
+            }
+            
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
+        });
+ 
+        // 3D Parallax Loop
+        gsap.ticker.add(() => {
+            if (window.innerWidth <= 991 || !isBlasted) return;
+            
+            icons.forEach((icon, index) => {
+                const depth = parseFloat(icon.getAttribute('data-depth')) || 0.5;
+                const side = icon.getAttribute('data-side') || 'left';
+                const directionMultiplier = side === 'left' ? 1 : -1;
+                
+                // Add a mild floating offset (sine wave over time, offset per icon index)
+                const time = Date.now() * 0.0015;
+                const floatX = Math.sin(time + index) * 12 * depth;
+                const floatY = Math.cos(time * 0.8 + index) * 18 * depth;
+                const floatRotate = Math.sin(time * 0.5 + index) * 3;
+                
+                const targetX = (mouseX * 90 * depth * directionMultiplier) + floatX;
+                const targetY = (mouseY * 90 * depth * directionMultiplier) + floatY;
+                const targetRotate = (mouseX * 24 * depth * directionMultiplier) + floatRotate;
+                
+                // Translate & rotate wrapper
+                gsap.to(icon, {
+                    x: targetX,
+                    y: targetY,
+                    rotation: targetRotate,
+                    duration: 0.8,
+                    ease: 'power2.out',
+                    overwrite: 'auto'
+                });
+ 
+                // Holographic card tilt
+                const card = icon.querySelector('.social-icon-card');
+                if (card) {
+                    const tiltX = -mouseY * 22;
+                    const tiltY = mouseX * 22;
+                    gsap.to(card, {
+                        rotateX: tiltX,
+                        rotateY: tiltY,
+                        duration: 0.6,
+                        ease: 'power1.out',
+                        overwrite: 'auto'
+                    });
+                }
+            });
+        });
+    }
 
     // ==========================================
     // STICKY STACKING CARDS — Scroll-Linked Depth
