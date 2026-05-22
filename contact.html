@@ -211,13 +211,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="script.js"></script>
     <script>
-        // Inline script to handle form submission with AJAC/Fetch and redirect to thank-you.html
+        // Inline script to handle form submission, trigger WhatsApp redirection and submit Web3Forms in background
         document.getElementById('contact-form-element').addEventListener('submit', function (e) {
             e.preventDefault();
 
             const submitBtn = this.querySelector('button[type="submit"]');
-            const originalBtnText = submitBtn.innerText;
-            submitBtn.innerText = 'Sending...';
+            submitBtn.innerText = 'Redirecting to WhatsApp...';
             submitBtn.disabled = true;
 
             const formData = new FormData(this);
@@ -225,9 +224,22 @@
 
             // Prepare WhatsApp Message Link
             const waNumber = "919443520166";
-            const waText = `Hi Heliocenture! I just submitted an inquiry on your website.%0A%0A*Name:* ${dataObject.name}%0A*Phone:* ${dataObject.phone}%0A*Email:* ${dataObject.email || 'Not provided'}%0A*Message:* ${dataObject.message || 'Not provided'}`;
+            const messageLines = [
+                "Hi Heliocenture!",
+                "",
+                "I just submitted an inquiry on your website:",
+                `*Name:* ${dataObject.name}`,
+                `*Phone:* ${dataObject.phone}`,
+                `*Email:* ${dataObject.email || 'Not provided'}`,
+                `*Message:* ${dataObject.message || 'Not provided'}`
+            ];
+            const waText = encodeURIComponent(messageLines.join("\n"));
             const waUrl = `https://wa.me/${waNumber}?text=${waText}`;
 
+            // 1. Open WhatsApp link in a new tab immediately (synchronous to avoid popup blocker)
+            window.open(waUrl, '_blank');
+
+            // 2. Submit to Web3Forms in background
             fetch(this.action, {
                 method: 'POST',
                 body: formData,
@@ -235,27 +247,18 @@
                     'Accept': 'application/json'
                 }
             })
-            .then(async response => {
-                const data = await response.json();
-                if (response.ok && data.success) {
-                    // Redirect to thank-you.html with query parameters
-                    const queryParams = new URLSearchParams({
-                        name: dataObject.name || '',
-                        phone: dataObject.phone || '',
-                        email: dataObject.email || '',
-                        waUrl: waUrl || ''
-                    });
-                    window.location.href = `thank-you.html?${queryParams.toString()}`;
-                } else {
-                    throw new Error(data.message || 'Submission failed');
-                }
-            })
             .catch(error => {
-                console.error('Error:', error);
-                submitBtn.innerText = originalBtnText;
-                submitBtn.disabled = false;
-                alert('Error: ' + error.message + '. Please try again or message us on WhatsApp directly.');
+                console.error('Web3Forms background submit error:', error);
             });
+
+            // 3. Redirect the current page to thank-you.html for Conversion tracking
+            const queryParams = new URLSearchParams({
+                name: dataObject.name || '',
+                phone: dataObject.phone || '',
+                email: dataObject.email || '',
+                waUrl: waUrl
+            });
+            window.location.href = `thank-you.html?${queryParams.toString()}`;
         });
     </script>
 </body>
