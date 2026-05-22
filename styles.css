@@ -366,7 +366,7 @@ h6,
 }
 
 .hero-title {
-  font-size: clamp(44px, 6.2vw, 80px);
+  font-size: clamp(34px, 7.5vw, 80px);
   font-weight: 600;
   line-height: 1.05;
   letter-spacing: -0.03em;
@@ -501,11 +501,17 @@ h6,
   .hero-new {
     height: auto;
     min-height: auto;
-    padding: 140px 0 60px 0;
+    padding: 40px 0 60px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 
   .hero-content {
     margin-top: 0;
+    order: 1;
+    width: 100%;
   }
 
   .social-orbit {
@@ -520,6 +526,7 @@ h6,
     margin-top: 40px;
     pointer-events: auto;
     z-index: 12;
+    order: 2;
   }
 
   .social-icon-wrapper {
@@ -1330,11 +1337,20 @@ footer {
     display: block;
   }
 
-  .hero-cta {
+  .hero-cta,
+  .hero-action-buttons {
     flex-direction: column;
     align-items: stretch;
     width: 100%;
-    max-width: 300px;
+    max-width: 320px;
+    margin: 0 auto;
+    gap: 12px;
+  }
+
+  .hero-action-buttons .btn {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
   }
 
   .bento-stats-grid {
