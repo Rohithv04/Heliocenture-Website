@@ -286,51 +286,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            let loadedCount = 0;
-            let imagesToLoad = [];
+            if (portfolioLoader) portfolioLoader.style.display = 'none';
 
             portfolioItems.forEach(item => {
                 if (item.dataset.category === category) {
-                    const img = item.querySelector('img');
-                    if (!img.complete) {
-                        imagesToLoad.push(img);
-                    }
-                }
-            });
-
-            const displayItems = () => {
-                if (portfolioLoader) portfolioLoader.style.display = 'none';
-                
-                portfolioItems.forEach(item => {
-                    if (item.dataset.category === category) {
-                        item.classList.add('show');
-                        setTimeout(() => item.classList.add('visible'), 50);
-                    } else {
-                        item.classList.remove('visible');
-                        item.classList.remove('show');
-                    }
-                });
-            };
-
-            if (imagesToLoad.length > 0) {
-                if (portfolioLoader) portfolioLoader.style.display = 'flex';
-                portfolioItems.forEach(item => {
+                    item.classList.add('show');
+                    setTimeout(() => item.classList.add('visible'), 50);
+                } else {
                     item.classList.remove('visible');
                     item.classList.remove('show');
-                });
-
-                let loaded = 0;
-                imagesToLoad.forEach(img => {
-                    img.onload = img.onerror = () => {
-                        loaded++;
-                        if (loaded === imagesToLoad.length) {
-                            displayItems();
-                        }
-                    };
-                });
-            } else {
-                displayItems();
-            }
+                }
+            });
         };
 
         portfolioTabs.forEach(tab => {

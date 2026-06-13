@@ -659,7 +659,8 @@ h6,
   padding: 0 8px 12px 8px;
 }
 
-.bento-text h3 {
+.bento-text h3,
+.bento-text .bento-stat-title {
   font-family: var(--font-sans);
   font-weight: 700;
   font-size: 24px;
@@ -1223,6 +1224,7 @@ footer {
 
 .footer-logo img {
   height: 24px;
+  width: auto;
 }
 
 .footer-links {
