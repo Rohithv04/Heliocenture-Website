@@ -575,15 +575,19 @@ h6,
 
 .clients-track {
   display: flex;
-  gap: 80px;
-  animation: scroll-clients 40s linear infinite;
+  gap: 72px;
+  animation: scroll-clients 50s linear infinite;
   white-space: nowrap;
   align-items: center;
 }
 
+.clients-track:hover {
+  animation-play-state: paused;
+}
+
 .client-logo {
   flex-shrink: 0;
-  height: 48px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -592,7 +596,7 @@ h6,
 .client-logo img {
   height: 100%;
   width: auto;
-  max-width: 160px;
+  max-width: 155px;
   object-fit: contain;
   filter: grayscale(0) opacity(1);
   transition: all 400ms var(--ease-standard);
@@ -600,7 +604,7 @@ h6,
 
 .client-logo:hover img {
   filter: grayscale(0) opacity(1);
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
 @keyframes scroll-clients {
@@ -609,10 +613,10 @@ h6,
   }
 
   100% {
-    transform: translateX(calc(-50% - 40px));
+    transform: translateX(calc(-50% - 36px));
   }
 
-  /* Adjust for half the track + half the gap */
+  /* Adjust for half the track + half the gap (72px / 2 = 36px) */
 }
 
 /* Bento Stats Grid */
