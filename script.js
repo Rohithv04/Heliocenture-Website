@@ -35,16 +35,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 fadeObserver.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    }, { threshold: 0.05, rootMargin: '0px 0px 80px 0px' });
 
-    // Group elements by section to stagger their fade-ins
+    // Group elements by section to stagger their fade-ins with capped delays
     const sections = document.querySelectorAll('.section, .hero, .guarantee-grid, .clients-floater');
     sections.forEach(section => {
         const fadeElements = section.querySelectorAll('.fade-up');
         fadeElements.forEach((el, index) => {
-            // Apply stagger delay dynamically if not already set
             if (!el.style.transitionDelay) {
-                el.style.transitionDelay = `${index * 100}ms`;
+                el.style.transitionDelay = `${Math.min(index * 60, 240)}ms`;
             }
             fadeObserver.observe(el);
         });
@@ -56,7 +55,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const heroNew = document.querySelector('.hero-new');
     const icons = document.querySelectorAll('.social-icon-wrapper');
     
-    if (heroNew && icons.length > 0) {
+    if (heroNew && icons.length > 0 && typeof gsap !== 'undefined') {
+        // Track whether hero is visible to pause background tickers
+        let isHeroInView = true;
+        const heroObserver = new IntersectionObserver((entries) => {
+            isHeroInView = entries[0].isIntersecting;
+        }, { threshold: 0 });
+        heroObserver.observe(heroNew);
+
         // Stagger fade-in the text and CTA buttons
         gsap.to('.fade-up-hero', {
             opacity: 1,
@@ -75,15 +81,12 @@ document.addEventListener('DOMContentLoaded', () => {
         let isBlasted = false;
 
         icons.forEach((icon) => {
-            // Get wrapper center position relative to the hero container
             const iconLeft = icon.offsetLeft + icon.offsetWidth / 2;
             const iconTop = icon.offsetTop + icon.offsetHeight / 2;
             
-            // Calculate displacement vector from the center
             const deltaX = iconLeft - heroCenterX;
             const deltaY = iconTop - heroCenterY;
             
-            // Blast out from center to absolute layouts
             gsap.fromTo(icon, 
                 {
                     x: -deltaX,
@@ -118,37 +121,29 @@ document.addEventListener('DOMContentLoaded', () => {
         let lastMouseY = null;
 
         window.addEventListener('mousemove', (e) => {
-            if (window.innerWidth <= 991) return;
+            if (window.innerWidth <= 991 || !isHeroInView) return;
             
-            // Normalize mouse coordinates between -1 and 1
             mouseX = (e.clientX / window.innerWidth) * 2 - 1;
             mouseY = (e.clientY / window.innerHeight) * 2 - 1;
 
-            // Trigger temporary glitched trail on mouse speed/direction
             if (isBlasted && lastMouseX !== null && lastMouseY !== null) {
                 const deltaX = e.clientX - lastMouseX;
                 const deltaY = e.clientY - lastMouseY;
                 const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-                         // Only trigger if mouse moves faster than threshold to look professional
                 if (distance > 4) {
                     const shiftX = Math.max(-28, Math.min(deltaX * 0.8, 28));
                     const shiftY = Math.max(-28, Math.min(deltaY * 0.8, 28));
                     
                     icons.forEach((icon) => {
                         const orangeLayer = icon.querySelector('.glitch-orange');
-                        
                         if (orangeLayer) {
                             gsap.killTweensOf(orangeLayer);
-                            
-                            // Displace layer as a trail opposite to cursor direction
                             gsap.set(orangeLayer, {
                                 x: -shiftX,
                                 y: -shiftY,
                                 opacity: 0.75,
                                 scale: 1.06
                             });
-                            
-                            // Return to normal and fade out smoothly
                             gsap.to(orangeLayer, {
                                 x: 0,
                                 y: 0,
@@ -164,19 +159,19 @@ document.addEventListener('DOMContentLoaded', () => {
             
             lastMouseX = e.clientX;
             lastMouseY = e.clientY;
-        });
- 
-        // 3D Parallax Loop
+        }, { passive: true });
+
+        // 3D Parallax Loop — Pauses when hero is scrolled off-screen
         gsap.ticker.add(() => {
-            if (window.innerWidth <= 991 || !isBlasted) return;
+            if (window.innerWidth <= 991 || !isBlasted || !isHeroInView) return;
             
+            const time = Date.now() * 0.0015;
+
             icons.forEach((icon, index) => {
                 const depth = parseFloat(icon.getAttribute('data-depth')) || 0.5;
                 const side = icon.getAttribute('data-side') || 'left';
                 const directionMultiplier = side === 'left' ? 1 : -1;
                 
-                // Add a mild floating offset (sine wave over time, offset per icon index)
-                const time = Date.now() * 0.0015;
                 const floatX = Math.sin(time + index) * 12 * depth;
                 const floatY = Math.cos(time * 0.8 + index) * 18 * depth;
                 const floatRotate = Math.sin(time * 0.5 + index) * 3;
@@ -185,7 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const targetY = (mouseY * 90 * depth * directionMultiplier) + floatY;
                 const targetRotate = (mouseX * 24 * depth * directionMultiplier) + floatRotate;
                 
-                // Translate & rotate wrapper
                 gsap.to(icon, {
                     x: targetX,
                     y: targetY,
@@ -194,8 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ease: 'power2.out',
                     overwrite: 'auto'
                 });
- 
-                // Holographic card tilt
+
                 const card = icon.querySelector('.social-icon-card');
                 if (card) {
                     const tiltX = -mouseY * 22;
@@ -213,59 +206,76 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
-    // STICKY STACKING CARDS — Scroll-Linked Depth
+    // STICKY STACKING CARDS — Optimized Scroll Pipeline
     // ==========================================
     const stackingCards = document.querySelectorAll('.stacking-card');
 
     if (stackingCards.length > 0) {
-        // Prevent horizontal overflow without using overflow-x:hidden on body
-        // (which kills position:sticky). Instead, clip at the root level.
         document.documentElement.style.overflowX = 'clip';
 
+        const cardsData = Array.from(stackingCards).map(card => {
+            card.style.transformOrigin = 'top center';
+            return {
+                card,
+                inner: card.querySelector('.stacking-card-inner'),
+                lastScale: null,
+                lastOpacity: null
+            };
+        });
+
+        // Only compute card stacking geometry when the section is in/near the viewport
+        let isStackingInView = false;
+        const stackingTrack = document.querySelector('.stacking-track') || stackingCards[0].parentElement;
+        if (stackingTrack) {
+            const trackObserver = new IntersectionObserver((entries) => {
+                isStackingInView = entries[0].isIntersecting;
+                if (isStackingInView) scheduleStackingUpdate();
+            }, { rootMargin: '300px 0px' });
+            trackObserver.observe(stackingTrack);
+        }
+
+        let ticking = false;
         const handleStackingScroll = () => {
-            stackingCards.forEach((card, index) => {
-                // Only animate cards that have a card stacking on top of them
-                if (index >= stackingCards.length - 1) return;
+            if (!isStackingInView) return;
 
-                const nextCard = stackingCards[index + 1];
-                const cardRect = card.getBoundingClientRect();
-                const nextRect = nextCard.getBoundingClientRect();
+            // Phase 1: BATCH ALL DOM READS FIRST (prevents forced layout thrashing)
+            const vhGap = 2 * (window.innerHeight / 100);
+            const rects = cardsData.map(c => c.card.getBoundingClientRect());
 
-                // The vh gap between adjacent sticky tops (e.g., 12vh - 10vh = 2vh)
-                const vhGap = 2 * (window.innerHeight / 100);
-
-                // Distance from the top of this card to the top of the next card
+            // Phase 2: BATCH ALL DOM WRITES (smooth compositor execution)
+            for (let i = 0; i < cardsData.length - 1; i++) {
+                const cardRect = rects[i];
+                const nextRect = rects[i + 1];
                 const distance = nextRect.top - cardRect.top;
-
-                // Max distance is approximately the card height (before overlap starts)
                 const maxDist = cardRect.height;
-
-                // Clamp distance between the vh gap (fully overlapped) and maxDist (no overlap)
                 const clampedDist = Math.max(vhGap, Math.min(distance, maxDist));
-
-                // Progress: 0 = no overlap, 1 = fully stacked
                 const progress = 1 - (clampedDist - vhGap) / (maxDist - vhGap);
 
-                // Scale: 1.0 → 0.95 as it gets covered
-                const scale = 1 - (0.05 * progress);
-                // Opacity: 1.0 → 0.8 as it gets covered
-                const opacity = 1 - (0.2 * progress);
-                // Shadow intensifies on the covering card
-                const shadowProgress = Math.min(progress * 2, 1);
+                const scale = Math.round((1 - (0.05 * progress)) * 1000) / 1000;
+                const opacity = Math.round((1 - (0.2 * progress)) * 100) / 100;
 
-                card.style.transform = `scale(${scale})`;
-                card.style.transformOrigin = 'top center';
-                card.style.opacity = opacity;
-
-                // Add a deeper shadow to the next card as it slides over
-                nextCard.querySelector('.stacking-card-inner').style.boxShadow =
-                    `0 ${4 + 16 * shadowProgress}px ${24 + 24 * shadowProgress}px rgba(0, 0, 0, ${0.06 + 0.08 * shadowProgress})`;
-            });
+                const c = cardsData[i];
+                if (c.lastScale !== scale || c.lastOpacity !== opacity) {
+                    c.card.style.transform = `scale3d(${scale}, ${scale}, 1)`;
+                    c.card.style.opacity = opacity;
+                    c.lastScale = scale;
+                    c.lastOpacity = opacity;
+                }
+            }
         };
 
-        window.addEventListener('scroll', handleStackingScroll, { passive: true });
-        // Initial call to set correct state if user refreshes mid-page
-        handleStackingScroll();
+        const scheduleStackingUpdate = () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    handleStackingScroll();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        };
+
+        window.addEventListener('scroll', scheduleStackingUpdate, { passive: true });
+        scheduleStackingUpdate();
     }
 
     // ==========================================
@@ -291,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
             portfolioItems.forEach(item => {
                 if (item.dataset.category === category) {
                     item.classList.add('show');
-                    setTimeout(() => item.classList.add('visible'), 50);
+                    requestAnimationFrame(() => item.classList.add('visible'));
                 } else {
                     item.classList.remove('visible');
                     item.classList.remove('show');
@@ -310,5 +320,20 @@ document.addEventListener('DOMContentLoaded', () => {
         // Initialize first tab
         showCategory('logos');
     }
+
+    // ==========================================
+    // SILKY IN-PAGE ANCHOR NAVIGATION
+    // ==========================================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', (e) => {
+            const href = anchor.getAttribute('href');
+            if (href === '#' || !href) return;
+            const target = document.querySelector(href);
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
 
 });
